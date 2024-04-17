@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/Israel-Ferreira/pre-order/preorder-service/internal/service"
@@ -49,5 +50,23 @@ func ReservePreOrderProductHandler(rw http.ResponseWriter, r *http.Request) {
 		sendErrorMsg(rw, err, http.StatusInternalServerError)
 		return
 	}
+
+}
+
+func CancelReserveHandler(rw http.ResponseWriter, r *http.Request) {
+	reservationId := r.PathValue("reserveId")
+
+	log.Printf("Id da Reserva: %s \n", reservationId)
+
+	reserve, err := service.FindHistory(reservationId)
+
+	if err != nil {
+		sendErrorMsg(rw, err, http.StatusNotFound)
+		return
+	}
+
+	service.CancelReserve(reserve)
+
+	rw.WriteHeader(http.StatusNoContent)
 
 }

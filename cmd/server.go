@@ -14,7 +14,7 @@ func StartMuxServer() {
 
 	mux.HandleFunc("POST /reserve-product", handlers.ReservePreOrderProductHandler)
 
-	mux.HandleFunc("DELETE /reserve/{reserveId}", func(w http.ResponseWriter, r *http.Request) {})
+	mux.HandleFunc("DELETE /reserve/{reserveId}", handlers.CancelReserveHandler)
 
 	log.Fatalln(http.ListenAndServe(":8080", mux))
 }

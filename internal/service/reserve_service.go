@@ -17,5 +17,26 @@ func SendReserve(preOrderReq requests.ReserveProductReq, product models.Product)
 		return err
 	}
 
+	SaveInHistory(*rspm)
+
+	return nil
+}
+
+func CancelReserve(historyObj models.HistoryObj) error {
+	cmdCancel := commands.CancelProductReserveCommand{
+		CancelProductReverse: models.CancelReserveModel{
+			ReserveID: historyObj.ReservationID,
+			Sku:       historyObj.Sku,
+			CustomerData: models.Customer{
+				Email: historyObj.CustomerData.Email,
+				Cpf:   historyObj.CustomerData.Cpf,
+			},
+		},
+	}
+
+	if err := ExecuteCommand(&cmdCancel); err != nil {
+		return err
+	}
+
 	return nil
 }
